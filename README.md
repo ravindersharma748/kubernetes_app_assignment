@@ -19,30 +19,30 @@ Let's create what we discussed so far.
 ##### PV and PVClaim
 
 ```
-$ cat mysql-pv.yml
-kind: PersistentVolume
+$ cat mysql-pv.yaml
 apiVersion: v1
+kind: PersistentVolume
 metadata:
   name: mysql-pv-volume
   labels:
     type: local
 spec:
-  storageClassName: cinder-high-speed
+  storageClassName: manual
   capacity:
     storage: 6Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data"
+    path: "/mnt/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
 spec:
-  storageClassName: cinder-high-speed
+  storageClassName: manual
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
@@ -59,19 +59,17 @@ persistentvolumeclaim/mysql-pv-claim created
 ##### Mysql Deployment
 
 ```
-$ cat mysql.yml
+$ cat mysql-deployment.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql
 spec:
-  type: NodePort
   ports:
-    - port: 3306
-      targetPort: 3306
-      nodePort: 30306 # exposed port where our application with communicate with service
+  - port: 3306
   selector:
     app: mysql
+  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -89,21 +87,22 @@ spec:
         app: mysql
     spec:
       containers:
-        - image: mysql:5.7
+      - image: mysql:5.6
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
           name: mysql
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: root
-          ports:
-            - containerPort: 3306
-              name: mysql
-          volumeMounts:
-            - name: mysql-persistent-storage
-              mountPath: /var/lib/mysql
-      volumes:
+        volumeMounts:
         - name: mysql-persistent-storage
-          persistentVolumeClaim:
-            claimName: mysql-pv-claim
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
 ```
 
 ##### Ouptput
