@@ -4,7 +4,8 @@ This Setup consists of a simple Nodejs application with mysql Database at backen
 
 The Architecture diagram of this simple setup is as below:
 
-![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124288575-f3e9bf80-db6e-11eb-8887-8e66745cf9a6.png)
+![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124357396-e39e1700-dc38-11eb-8279-d8762b13624f.png)
+
 
 ### Let's Start Now
 
