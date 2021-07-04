@@ -6,6 +6,13 @@ The Architecture diagram of this simple setup is as below:
 
 ![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124357396-e39e1700-dc38-11eb-8279-d8762b13624f.png)
 
+### kubernetes Cluster
+
+I used kind to setup kubernetes 1 mater 2 worker node setup. kind yaml file user for the setup is kind-cluster-config.yaml.
+
+```
+kind create cluster --config kind-cluster-config.yaml --name kubernetes-app-assignment
+```
 
 ### Let's Start Now
 
