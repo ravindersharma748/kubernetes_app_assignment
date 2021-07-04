@@ -4,16 +4,46 @@ This Setup consists of a simple Nodejs application with mysql Database at backen
 
 The Architecture diagram of this simple setup is as below:
 
-![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124357396-e39e1700-dc38-11eb-8279-d8762b13624f.png)
+![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124374101-fe62a100-dcb5-11eb-9b6f-1c8d0f7d21ee.png)
+
 
 ### kubernetes Cluster
 
-I used kind to setup kubernetes 1 mater 2 worker node setup. kind yaml file user for the setup is kind-cluster-config.yaml.
+I used kind to setup kubernetes 1 mater 2 worker node setup. kind yaml file used for the setup is kind-cluster-config.yaml.
 
 ```
 kind create cluster --config kind-cluster-config.yaml --name kubernetes-app-assignment
 ```
 
+### Creating a local docker docker registry
+
+We created our local docker registry for this demo setup. We created this registry using a script.
+
+```
+#!/bin/sh
+reg_name='kind-registry'
+reg_port='5000'
+running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
+if [ "${running}" != 'true' ]; then
+  docker run \
+    -d --restart=always -p "${reg_port}:5000" --name "${reg_name}" \
+    registry:2
+fi
+```
+
+Run this script to create a local repository:
+
+```
+./kind-local-registry.sh
+```
+ Now we created kind cluster to use this repository using config file local-registry.yaml
+ 
+ ```
+ kind create cluster --config local-registry.yaml
+ ```
+ 
+ The last part to create this demo setup is 
+ 
 ### Let's Start Now
 
 Instead of going forward, we will do the reverse engineering on it. Our workflow will be like below:
