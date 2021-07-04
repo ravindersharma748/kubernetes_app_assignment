@@ -25,12 +25,20 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql:5.6
-        name: mysql
+      - image: mysql:5.7
+        name: mysql-app
         env:
           # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD
           value: password
+        - name: MYSQL_DATABASE     
+          value: node_db           
+        - name: MYSQL_PASSWORD     
+          value: password          
+        - name: MYSQL_ROOT_PASSWORD
+          value: root              
+        - name: MYSQL_USER         
+          value: admin             
         ports:
         - containerPort: 3306
           name: mysql

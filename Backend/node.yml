@@ -1,20 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-deployment
+  name: nodejs
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: node
+      app: nodejs
   template:
     metadata:
       labels:
-        app: node
+        app: nodejs
     spec:
       containers:
-        - name: node
-          image: nodejs-app
+        - env:                   
+            - name: MYSQL_DB     
+              value: node_db     
+            - name: MYSQL_HOST   
+              value: mysql-app   
+            - name: MYSQL_PASS   
+              value: password    
+            - name: MYSQL_USER   
+              value: admin       
+          name: nodejs-app
+          image: nodejs-app:1.0.0
           imagePullPolicy: Never
           ports:
             - containerPort: 8005
@@ -24,10 +33,9 @@ kind: Service
 metadata:
   name: node
 spec:
-  type: NodePort
+  type: 
   selector:
     app: node
   ports:
-    - port: 80 # expose the service on internal port 80
+    - port: 8005 # expose the service on internal port 80
       targetPort: 8005 # our NodeJS app listens on port 3000
-      nodePort: 30006
