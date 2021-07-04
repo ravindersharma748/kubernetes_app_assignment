@@ -23,8 +23,7 @@ spec:
             - name: MYSQL_USER   
               value: admin       
           name: nodejs-app
-          image: nodejs-app:1.0.0
-          imagePullPolicy: Never
+          image: localhost:5000/nodejs-app:1.0.0
           ports:
             - containerPort: 8005
 ---
