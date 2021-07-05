@@ -32,9 +32,10 @@ kind: Service
 metadata:
   name: node
 spec:
-  type: 
+  type: NodePort 
   selector:
     app: nodejs
   ports:
     - port: 8005 # expose the service on internal port
       targetPort: 8005 # our NodeJS app listens on port 8005
+      nodePort: 30000

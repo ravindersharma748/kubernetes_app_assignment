@@ -3,7 +3,7 @@ set -o errexit
 
 reg_name='kind-registry'
 reg_port='5000'
-k8s_version='1.18.8'
+k8s_version='1.21.1'
 
 # Start a local Docker registry (unless it already exists)
 running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
@@ -26,7 +26,6 @@ containerdConfigPatches:
 nodes:
 - role: control-plane
 - role: worker
-- role: worker
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
@@ -39,6 +38,9 @@ nodes:
     protocol: TCP
   - containerPort: 443
     hostPort: 443
+    protocol: TCP
+  - containerPort: 30000
+    hostPort: 30000
     protocol: TCP
 EOF
 
