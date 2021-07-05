@@ -12,7 +12,7 @@ The Architecture diagram of this simple setup is as below:
 I used kind to setup kubernetes 1 mater 2 worker node setup. kind yaml file used for the setup is kind-cluster-config.yaml.
 
 ```
-kind create cluster --config kind-cluster-config.yaml --name kubernetes-app-assignment
+kind create cluster --config kind-cluster-config.yaml
 ```
 
 ### Creating a local docker docker registry
@@ -42,7 +42,6 @@ Run this script to create a local repository:
  kind create cluster --config local-registry.yaml
  ```
  
- The last part to create this demo setup is 
  
 ### Let's Start Now
 
@@ -50,7 +49,7 @@ Instead of going forward, we will do the reverse engineering on it. Our workflow
 
 PV and PV claim ----> Mysql deployment ----> Mysql service (PV is persistent volume and PVC is persistent volume claim)
 
-Here we will get Mysql service which is a headless service, so that we can supply it inside our Node js application connection string(index.js). The benifit of creating service is that you don't need to worry about the pod running behined it, pods are ephemeral but service will be always there with static IP even it has zero pod.
+Here we will get Mysql service which is a headless service, so that we can supply it inside our Node js application connection string(index.js). The benifit of creating service is that you don't need to worry about the pod running behined it, pods are ephemeral but service will be always there with static IP even it has zero pods.
 
 Let's create what we discussed so far.
 
