@@ -156,7 +156,7 @@ service/mysql created
 deployment.apps/mysql created
 ```
 
-Checking Mysql Database connectivity:
+##### Checking Mysql Database connectivity:
 
 ```
 kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -u admin -pxxxxxxx
@@ -172,3 +172,6 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
+As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
+
+##### Secrets and Configmap:
