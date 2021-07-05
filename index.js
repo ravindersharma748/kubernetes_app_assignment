@@ -25,17 +25,23 @@ app.get('/',function(req,res){
    console.log(connectionOptions);
 
    var connection = mysql.createConnection(connectionOptions);
-   var queryStr = `SELECT * FROM MOE_ITEM_T`;
+   var sql = "CREATE TABLE IF NOT EXISTS MY_TABLE (MESSAGE VARCHAR(50) NOT NULL)"
+   var queryStr = `SELECT * FROM MY_TABLE`;
    
    connection.connect();
- 
+
+   connection.query(sql, function (err, result) {
+     if (err) throw err;
+     console.log("Table created");
+     });
+
    connection.query(queryStr, function (error, results, fields) {
      if (error) throw error;
      
      responseStr = '';
 
      results.forEach(function(data){
-        responseStr += data.ITEM_NAME + ' : ';
+        responseStr += data.MESSAGE;
         console.log(data);
      });
 
