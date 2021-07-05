@@ -12,7 +12,7 @@ The Architecture diagram of this simple setup is as below:
 I used kind to setup kubernetes 1 mater 2 worker node setup. kind yaml file used for the setup is kind-cluster-config.yaml.
 
 ```
-kind create cluster --config kind-cluster-config.yaml --name kubernetes-app-assignment
+kind create cluster --config kind-cluster-config.yaml
 ```
 
 ### Creating a local docker docker registry
@@ -42,7 +42,6 @@ Run this script to create a local repository:
  kind create cluster --config local-registry.yaml
  ```
  
- The last part to create this demo setup is 
  
 ### Let's Start Now
 
@@ -50,7 +49,7 @@ Instead of going forward, we will do the reverse engineering on it. Our workflow
 
 PV and PV claim ----> Mysql deployment ----> Mysql service (PV is persistent volume and PVC is persistent volume claim)
 
-Here we will get Mysql service which is a headless service, so that we can supply it inside our Node js application connection string(index.js). The benifit of creating service is that you don't need to worry about the pod running behined it, pods are ephemeral but service will be always there with static IP even it has zero pod.
+Here we will get Mysql service which is a headless service, so that we can supply it inside our Node js application connection string(index.js). The benifit of creating service is that you don't need to worry about the pod running behined it, pods are ephemeral but service will be always there with static IP even it has zero pods.
 
 Let's create what we discussed so far.
 
@@ -129,16 +128,14 @@ spec:
         name: mysql-app
         env:
           # Use secret in real usage
-        - name: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          value: node_db
+        - name: MYSQL_PASSWORD
           value: password
-        - name: MYSQL_DATABASE     
-          value: node_db           
-        - name: MYSQL_PASSWORD     
-          value: password          
         - name: MYSQL_ROOT_PASSWORD
-          value: root              
-        - name: MYSQL_USER         
-          value: admin             
+          value: root
+        - name: MYSQL_USER
+          value: admin
         ports:
         - containerPort: 3306
           name: mysql
@@ -158,3 +155,22 @@ service/mysql created
 deployment.apps/mysql created
 ```
 
+##### Checking Mysql Database connectivity:
+
+```
+kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -u admin -pxxxxxxx
+If you don't see a command prompt, try pressing enter.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| node_db            |
++--------------------+
+2 rows in set (0.00 sec)
+```
+
+As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
+
+##### Secrets and Configmap:

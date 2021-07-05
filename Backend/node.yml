@@ -34,7 +34,7 @@ metadata:
 spec:
   type: 
   selector:
-    app: node
+    app: nodejs
   ports:
-    - port: 8005 # expose the service on internal port 80
-      targetPort: 8005 # our NodeJS app listens on port 3000
+    - port: 8005 # expose the service on internal port
+      targetPort: 8005 # our NodeJS app listens on port 8005
