@@ -129,16 +129,14 @@ spec:
         name: mysql-app
         env:
           # Use secret in real usage
-        - name: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          value: node_db
+        - name: MYSQL_PASSWORD
           value: password
-        - name: MYSQL_DATABASE     
-          value: node_db           
-        - name: MYSQL_PASSWORD     
-          value: password          
         - name: MYSQL_ROOT_PASSWORD
-          value: root              
-        - name: MYSQL_USER         
-          value: admin             
+          value: root
+        - name: MYSQL_USER
+          value: admin
         ports:
         - containerPort: 3306
           name: mysql
@@ -156,5 +154,21 @@ spec:
 $ kubectl apply -f mysql.yml
 service/mysql created
 deployment.apps/mysql created
+```
+
+Checking Mysql Database connectivity:
+
+```
+kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -u admin -pxxxxxxx
+If you don't see a command prompt, try pressing enter.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| node_db            |
++--------------------+
+2 rows in set (0.00 sec)
 ```
 
