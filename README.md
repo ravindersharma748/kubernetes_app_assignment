@@ -12,7 +12,7 @@ Api endpoint: http://kubernetes.docker.internal/api
 
 The Architecture diagram of this simple setup is as below:
 
-![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124374101-fe62a100-dcb5-11eb-9b6f-1c8d0f7d21ee.png)
+![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124588869-ef771c80-de76-11eb-9135-2f15bd382e3a.png)
 
 
 ### kubernetes Cluster
