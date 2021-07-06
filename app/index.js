@@ -2,12 +2,16 @@ var mysql = require('mysql');
 var express = require('express');
 
 var app = express();
-var port = process.env.PORT || 8005;
+var port = process.env.PORT || 3000;
 var responseStr = "MySQL Data:";
+
+app.get('/api', (req, res) => {     
+  res.send('Hello World, Welcome to Backend Application \n') 
+})
 
 app.get('/',function(req,res){
    
-   var mysqlHost = process.env.MYSQL_HOST || 'mysql';
+   var mysqlHost = 'mysql';
    var mysqlPort = process.env.MYSQL_PORT || '3306';
    var mysqlUser = process.env.MYSQL_USER || 'root';
    var mysqlPass = process.env.MYSQL_PASS || 'password';
