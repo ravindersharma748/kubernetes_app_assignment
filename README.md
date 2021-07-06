@@ -1,6 +1,8 @@
 # kubernetes_app_assignment
 
-This Setup consists of a simple Nodejs application with mysql Database at backend, frontend part is a apache reverse proxy.
+This Setup consists of a simple Nodejs application with mysql Database at backend, frontend part is a apache/nginx reverse proxy.
+
+To Access the application, we will use Ingress URL. 
 
 The Architecture diagram of this simple setup is as below:
 
@@ -189,8 +191,18 @@ configmap/mysql-configmap created
 
 ### Backend Application
 
+Backend application is a simple Nodejs application.
+
+The Backend deployment is store in node.yml file under Backend directory.
+
+The nodejs application Dockerfile is stored under app directory.
+
 
 ### Frontend Nginx Proxy
+
+Frontend Application is a simple nginx proxy, which pointing to DB and backend api endpoint.
+
+All the frontend files are stored under Frontend directory.
 
 ### Ingress
 
