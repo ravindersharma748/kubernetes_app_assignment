@@ -36,17 +36,18 @@ spec:
               key: root_password
         - name: MYSQL_DATABASE
           valueFrom: 
-            configMapKeyRef:
-              name: mysql-configmap
+            secretKeyRef:
+              name: mysql-secret
               key: db_name         
         - name: MYSQL_PASSWORD     
+          valueFrom: 
             secretKeyRef:
               name: mysql-secret
               key: password                     
         - name: MYSQL_USER        
           valueFrom: 
-            configMapKeyRef:
-              name: mysql-configmap
+            secretKeyRef:
+              name: mysql-secret
               key: db_user         
         ports:
         - containerPort: 3306

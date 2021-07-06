@@ -3,5 +3,4 @@ kind: ConfigMap
 metadata:
   name: mysql-configmap
 data:
-  db_name: node_db
-  db_user: admin
+  db_url: mysql
