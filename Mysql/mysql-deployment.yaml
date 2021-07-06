@@ -30,15 +30,24 @@ spec:
         env:
           # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD
-          value: password
-        - name: MYSQL_DATABASE     
-          value: node_db           
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root_password
+        - name: MYSQL_DATABASE
+          valueFrom: 
+            configMapKeyRef:
+              name: mysql-configmap
+              key: db_name         
         - name: MYSQL_PASSWORD     
-          value: password          
-        - name: MYSQL_ROOT_PASSWORD
-          value: root              
-        - name: MYSQL_USER         
-          value: admin             
+            secretKeyRef:
+              name: mysql-secret
+              key: password                     
+        - name: MYSQL_USER        
+          valueFrom: 
+            configMapKeyRef:
+              name: mysql-configmap
+              key: db_user         
         ports:
         - containerPort: 3306
           name: mysql
