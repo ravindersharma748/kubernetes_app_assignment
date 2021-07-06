@@ -1,6 +1,14 @@
 # kubernetes_app_assignment
 
-This Setup consists of a simple Nodejs application with mysql Database at backend, frontend part is a apache reverse proxy.
+This Setup consists of a simple Nodejs application with mysql Database at backend, frontend part is a apache/nginx reverse proxy.
+
+To Access the application, we will use Ingress URL. 
+
+Application Ingress access URL's
+
+DB endpoint : http://kubernetes.docker.internal/
+
+Api endpoint: http://kubernetes.docker.internal/api
 
 The Architecture diagram of this simple setup is as below:
 
@@ -91,6 +99,21 @@ spec:
 $ kubectl create -f mysql-pv.yml
 persistentvolume/mysql-pv-volume created
 persistentvolumeclaim/mysql-pv-claim created
+``` 
+
+#### Secrets and Configmap:
+
+As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
+Secrets and configmap are stored in mysql-secrets.yaml and mysql-configmap.yaml files respectively
+
+```
+$ kubectl apply -f mysql-secrets.yaml
+secret/mysql-secret created
+```
+
+```
+kubectl apply -f mysql-configmap.yaml
+configmap/mysql-configmap created
 ```
 
 ##### Mysql Deployment
@@ -125,17 +148,28 @@ spec:
     spec:
       containers:
       - image: mysql:5.7
-        name: mysql-app
+        name: mysql
         env:
           # Use secret in real usage
-        - name: MYSQL_DATABASE
-          value: node_db
-        - name: MYSQL_PASSWORD
-          value: password
         - name: MYSQL_ROOT_PASSWORD
-          value: root
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root_password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: db_name
+        - name: MYSQL_PASSWORD
+            secretKeyRef:
+              name: mysql-secret
+              key: password
         - name: MYSQL_USER
-          value: admin
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: db_user
         ports:
         - containerPort: 3306
           name: mysql
@@ -171,6 +205,40 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
 
-##### Secrets and Configmap:
+### Backend Application
+
+Backend application is a simple Nodejs application.
+
+The Backend deployment is store in node.yml file under Backend directory.
+
+The nodejs application Dockerfile is stored under app directory.
+
+
+### Frontend Nginx Proxy
+
+Frontend Application is a simple nginx proxy, which pointing to DB and backend api endpoint.
+
+All the frontend files are stored under Frontend directory.
+
+### Ingress
+
+We used Ingress so that we can access our application using some nice URL instead of using url:port pattern
+
+Install Ingress using below config
+```
+ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml
+```
+
+To route traffic we defined the paths in ingress.yaml file. 
+
+```
+kubectl apply -f ingress.yaml
+```
+
+##### Output of ingress URL's
+
+![api_endpoint](https://user-images.githubusercontent.com/44415163/124577583-0748a380-de6b-11eb-99d6-3a7274164d80.PNG)
+
+![DB_endpoint](https://user-images.githubusercontent.com/44415163/124577609-0dd71b00-de6b-11eb-8646-f152864fddbc.PNG)
+
