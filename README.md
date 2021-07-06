@@ -4,6 +4,12 @@ This Setup consists of a simple Nodejs application with mysql Database at backen
 
 To Access the application, we will use Ingress URL. 
 
+Application Ingress access URL's
+
+DB endpoint : http://kubernetes.docker.internal/
+
+Api endpoint: http://kubernetes.docker.internal/api
+
 The Architecture diagram of this simple setup is as below:
 
 ![k8s_3tierapp](https://user-images.githubusercontent.com/44415163/124374101-fe62a100-dcb5-11eb-9b6f-1c8d0f7d21ee.png)
@@ -93,6 +99,21 @@ spec:
 $ kubectl create -f mysql-pv.yml
 persistentvolume/mysql-pv-volume created
 persistentvolumeclaim/mysql-pv-claim created
+``` 
+
+#### Secrets and Configmap:
+
+As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
+Secrets and configmap are stored in mysql-secrets.yaml and mysql-configmap.yaml files respectively
+
+```
+$ kubectl apply -f mysql-secrets.yaml
+secret/mysql-secret created
+```
+
+```
+kubectl apply -f mysql-configmap.yaml
+configmap/mysql-configmap created
 ```
 
 ##### Mysql Deployment
@@ -127,17 +148,28 @@ spec:
     spec:
       containers:
       - image: mysql:5.7
-        name: mysql-app
+        name: mysql
         env:
           # Use secret in real usage
-        - name: MYSQL_DATABASE
-          value: node_db
-        - name: MYSQL_PASSWORD
-          value: password
         - name: MYSQL_ROOT_PASSWORD
-          value: root
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root_password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: db_name
+        - name: MYSQL_PASSWORD
+            secretKeyRef:
+              name: mysql-secret
+              key: password
         - name: MYSQL_USER
-          value: admin
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-configmap
+              key: db_user
         ports:
         - containerPort: 3306
           name: mysql
@@ -173,21 +205,6 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
-
-#### Secrets and Configmap:
-
-Secrets and configmap are stored in mysql-secrets.yaml and mysql-configmap.yaml files respectively
-
-```
-$ kubectl apply -f mysql-secrets.yaml
-secret/mysql-secret created
-```
-
-```
-kubectl apply -f mysql-configmap.yaml
-configmap/mysql-configmap created
-```
 
 ### Backend Application
 
@@ -218,3 +235,10 @@ To route traffic we defined the paths in ingress.yaml file.
 ```
 kubectl apply -f ingress.yaml
 ```
+
+##### Output of ingress URL's
+
+![api_endpoint](https://user-images.githubusercontent.com/44415163/124577583-0748a380-de6b-11eb-99d6-3a7274164d80.PNG)
+
+![DB_endpoint](https://user-images.githubusercontent.com/44415163/124577609-0dd71b00-de6b-11eb-8646-f152864fddbc.PNG)
+
