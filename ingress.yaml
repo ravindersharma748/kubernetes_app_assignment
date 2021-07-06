@@ -1,16 +1,17 @@
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: nodeigr
+  name: webapp-ingress
 spec:
   rules:
-    - host: henodeigr.com
-      http:
-        paths:
-          - pathType: ImplementationSpecific
-            backend:
-              service:
-                name: node
-                port:
-                  number: 8005
-
+  - host: kubernetes.docker.internal
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: frontend-service 
+          servicePort: http
+      - path: /api
+        backend:
+          serviceName: frontend-service 
+          servicePort: http
