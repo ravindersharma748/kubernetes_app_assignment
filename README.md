@@ -175,6 +175,17 @@ As username and passwords should be securly stored somewhere else so we will cre
 
 #### Secrets and Configmap:
 
+Secrets and configmap are stored in mysql-secrets.yaml and mysql-configmap.yaml files respectively
+
+```
+$ kubectl apply -f mysql-secrets.yaml
+secret/mysql-secret created
+```
+
+```
+kubectl apply -f mysql-configmap.yaml
+configmap/mysql-configmap created
+```
 
 ### Backend Application
 
