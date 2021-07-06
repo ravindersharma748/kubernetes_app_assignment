@@ -173,15 +173,15 @@ mysql> show databases;
 
 As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
 
-##### Secrets and Configmap:
+#### Secrets and Configmap:
 
 
-##### Backend Application
+### Backend Application
 
 
-##### Frontend Nginx Proxy
+### Frontend Nginx Proxy
 
-##### Ingress
+### Ingress
 
 We used Ingress so that we can access our application using some nice URL instead of using url:port pattern
 
