@@ -174,3 +174,24 @@ mysql> show databases;
 As username and passwords should be securly stored somewhere else so we will create configmap and Secrets.
 
 ##### Secrets and Configmap:
+
+
+##### Backend Application
+
+
+##### Frontend Nginx Proxy
+
+##### Ingress
+
+We used Ingress so that we can access our application using some nice URL instead of using url:port pattern
+
+Install Ingress using below config
+```
+ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml
+```
+
+To route traffic we defined the paths in ingress.yaml file. 
+
+```
+kubectl apply -f ingress.yaml
+```
