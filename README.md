@@ -57,7 +57,8 @@ Instead of going forward, we will do the reverse engineering on it. Our workflow
 
 PV and PV claim ----> Mysql deployment ----> Mysql service (PV is persistent volume and PVC is persistent volume claim)
 
-Here we will get Mysql service which is a headless service, so that we can supply it inside our Node js application connection string(index.js). The benifit of creating service is that you don't need to worry about the pod running behined it, pods are ephemeral but service will be always there with static IP even it has zero pods.
+Here we will get Mysql service which is a headless service, basically headless service is useful with statefull applications like databases, the reason behind that is instead of doing the communication with clusterIP in headless service which is not present it directly communicates with pod's IP.  
+We will supply the hedless service name inside our Node js application connection string(index.js). The benifit of creating service is that you don't need to worry about the pod running behined it, pods are ephemeral but service will be always there with static IP even it has zero pods.
 
 Let's create what we discussed so far.
 
